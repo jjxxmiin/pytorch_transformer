@@ -2,7 +2,7 @@
 Transformer using pytorch
 
 
-![transformer](./assets/transformer)
+![transformer](https://github.com/jjeamin/pytorch_transformer/blob/main/assets/transformer.PNG)
 
 
 ## Reference
