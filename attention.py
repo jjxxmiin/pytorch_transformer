@@ -23,7 +23,7 @@ def attention(query, key, value, mask=None, dropout=None):
 
 
 class MultiHeadAttention(nn.Module):
-    def __init__(self, head, d_model, mask=None, dropout=0.1):
+    def __init__(self, head, d_model, dropout=0.1):
         super(MultiHeadAttention, self).__init__()
 
         self.d_k = self.d_v = d_model // head
@@ -40,6 +40,9 @@ class MultiHeadAttention(nn.Module):
 
     def forward(self, q, k, v, mask=None):
         num_batch = q.size(0)
+
+        if mask is not None:
+            mask = mask.unsqueeze(1)
 
         query = self.wq(q).view(num_batch, -1, self.head, self.d_k).transpose(1, 2)
         key = self.wk(k).view(num_batch, -1, self.head, self.d_k).transpose(1, 2)
