@@ -48,7 +48,7 @@ class MultiHeadAttention(nn.Module):
         key = self.wk(k).view(num_batch, -1, self.head, self.d_k).transpose(1, 2)
         value = self.wv(v).view(num_batch, -1, self.head, self.d_v).transpose(1, 2)
 
-        x, self.attention_score = attention(query, key, value, mask=self.mask, dropout=self.dropout)
+        x, self.attention_score = attention(query, key, value, mask=mask, dropout=self.dropout)
 
         x = x.transpose(1, 2).contiguous().view(num_batch, -1, self.head * self.d_k)
         x = self.wo(x)

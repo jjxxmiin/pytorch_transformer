@@ -52,11 +52,21 @@ class LayerNorm(nn.Module):
         return self.a_2 * (x - mean) / (std + self.eps) + self.b_2
 
 
-class SublayerOutput(nn.Module):
+class Sublayer1Output(nn.Module):
     def __init__(self, size, dropout):
-        super(SublayerOutput, self).__init__()
+        super(Sublayer1Output, self).__init__()
         self.norm = LayerNorm(size)
         self.dropout = nn.Dropout(dropout)
 
     def forward(self, x, sublayer):
         return x + self.dropout(sublayer(self.norm(x)))
+
+
+class Sublayer2Output(nn.Module):
+    def __init__(self, size, dropout):
+        super(Sublayer2Output, self).__init__()
+        self.norm = LayerNorm(size)
+        self.dropout = nn.Dropout(dropout)
+
+    def forward(self, dec_output, enc_output, sublayer):
+        return dec_output + self.dropout(sublayer(self.norm(dec_output), self.norm(enc_output)))
