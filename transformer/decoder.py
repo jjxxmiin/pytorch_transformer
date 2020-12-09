@@ -10,7 +10,7 @@ class Decoder(nn.Module):
 
     def forward(self, dec_input, enc_input, mask=None):
         for layer in self.layers:
-            x = layer(dec_input, enc_input, mask=None)
+            x = layer(dec_input, enc_input, mask=mask)
         return self.norm(x)
 
 
@@ -26,5 +26,5 @@ class DecoderLayer(nn.Module):
 
     def forward(self, dec_input, enc_output, mask=None):
         dec_output = self.sublayer_output[0](dec_input, lambda x: self.slf_attention(x, x, x, mask))
-        dec_output = self.sublayer_output[1](dec_output, enc_output, lambda x1, x2: self.enc_attention(x1, x2, x2, mask))
+        dec_output = self.sublayer_output[1](dec_output, enc_output, lambda x1, x2: self.enc_attention(x1, x2, x2, None))
         return self.sublayer_output[2](dec_output, self.feed_forward)

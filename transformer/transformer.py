@@ -8,6 +8,12 @@ from .decoder import DecoderLayer, Decoder
 from copy import deepcopy
 
 
+def get_attn_decoder_mask(seq):
+    subsequent_mask = torch.ones_like(seq).unsqueeze(-1).expand(seq.size(0), seq.size(1), seq.size(1))
+    subsequent_mask = subsequent_mask.triu(diagonal=1) # upper triangular part of a matrix(2-D)
+    return subsequent_mask
+
+
 class Transformer_Classify(nn.Module):
     def __init__(self, 
                  vocab_size,
@@ -30,7 +36,12 @@ class Transformer_Classify(nn.Module):
         self.fc = nn.Linear(d_model, 1)
 
     def forward(self, x):
-        x = self.embedder(x.permute(1, 0))
+        # batch first
+        x = self.embedder(x)
+
+        # batch last
+        # x = self.embedder(x.permute(1, 0))
+
         x = self.encoder(x)
 
         x = x[:,-1,:]
@@ -72,11 +83,17 @@ class Transformer_Seq2seq(nn.Module):
         self.trg_word_prj = nn.Linear(d_model, target_size, bias=False)
 
     def forward(self, source, target):
-        source = self.input_embedder(source.permute(1, 0))
-        enc_output = self.encoder(source)
+        mask = get_attn_decoder_mask(target)
+        
+        # batch last
+        # source = self.embedder(source.permute(1, 0))
+        # target = self.embedder(target.permute(1, 0))
 
-        target = self.output_embedder(target.permute(1, 0))
-        dec_output = self.decoder(target, enc_output)
+        source = self.input_embedder(source)
+        enc_output = self.encoder(source, mask=None)
+
+        target = self.output_embedder(target)
+        dec_output = self.decoder(target, enc_output, mask=mask)
 
         output = self.trg_word_prj(dec_output)
 

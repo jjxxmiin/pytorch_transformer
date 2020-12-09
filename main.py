@@ -7,8 +7,8 @@ d_ff = 512
 head = 8
 N = 2
 dropout = 0.1
-vocab_size = 1000
-target_size = 1000
+vocab_size = 100
+target_size = 100
 
 model = Transformer_Classify(vocab_size,
                              d_model=d_model,
@@ -17,7 +17,7 @@ model = Transformer_Classify(vocab_size,
                              N=N,
                              dropout=dropout)
 
-source = torch.rand(1, 1000).long()
+source = torch.rand(1, 100).long()
 
 print(model(source).shape)
 
@@ -30,7 +30,7 @@ model = Transformer_Seq2seq(vocab_size,
                             N=N,
                             dropout=dropout)
 
-source = torch.rand(1, 1000).long()
-target = torch.rand(1, 1000).long()
+source = torch.rand(1, 100).long()
+target = torch.rand(1, 100).long()
 
 print(model(source, target).shape)

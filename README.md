@@ -39,6 +39,31 @@ x = x * value
 
 ## Multi Head Attention
 
+- Parallel calculation of attention
+- See from each point of view
+
+## Masked Multi Head Attention
+
+- Decoder can't see the future
+- Decoder sees only the previous words and present word
+
+```
+     I Love you
+I    1   0   0
+Love 1   1   0
+you  1   1   1
+```
+
+## Feed Forward
+
+- attention shuffling ??
+
+```
+x = linear(x)
+x = relu(x)
+x = linear(x)
+```
+
 ## Reference
 
 - [https://github.com/AnubhavGupta3377/Text-Classification-Models-Pytorch](https://github.com/AnubhavGupta3377/Text-Classification-Models-Pytorch)
